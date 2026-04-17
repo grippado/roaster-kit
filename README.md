@@ -38,9 +38,28 @@ A **web version** at `roast.gripp.link` is on the way — paste a GitHub handle,
 
 ### CLI
 
+Works with any Node 20+ package manager. No install needed — run it ephemerally:
+
 ```bash
+# npm
 npx @grippado/roaster-kit <github-username>
+
+# yarn
+yarn dlx @grippado/roaster-kit <github-username>
+
+# pnpm
+pnpm dlx @grippado/roaster-kit <github-username>
 ```
+
+Prefer a global install?
+
+```bash
+npm install -g @grippado/roaster-kit
+yarn global add @grippado/roaster-kit
+pnpm add -g @grippado/roaster-kit
+```
+
+Then use either `roaster` or `roast` as the command name.
 
 Set `ANTHROPIC_API_KEY` first ([get one here](https://console.anthropic.com)). Optionally set `GITHUB_TOKEN` to raise the GitHub rate limit from 60/hr to 5000/hr.
 
@@ -146,7 +165,9 @@ See [`skill/roaster/references/safety-examples.md`](./skill/roaster/references/s
 Before you roast anyone else, roast yourself. It's the rule.
 
 ```bash
-npx @grippado/roaster-kit $(git config user.name) --spice=nuclear
+npx @grippado/roaster-kit $(git config github.user) --spice=nuclear
+# or
+pnpm dlx @grippado/roaster-kit $(git config github.user) --spice=nuclear
 ```
 
 ## Roadmap

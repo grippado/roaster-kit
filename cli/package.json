@@ -7,14 +7,18 @@
     "github",
     "cli",
     "claude",
+    "anthropic",
     "fun",
     "developer-humor"
   ],
-  "homepage": "https://github.com/grippado/roaster-kit",
-  "bugs": "https://github.com/grippado/roaster-kit/issues",
+  "homepage": "https://github.com/grippado/roaster-kit#readme",
+  "bugs": {
+    "url": "https://github.com/grippado/roaster-kit/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/grippado/roaster-kit.git"
+    "url": "git+https://github.com/grippado/roaster-kit.git",
+    "directory": "cli"
   },
   "license": "Apache-2.0",
   "author": "Gabriel Gripp (@grippado)",
@@ -35,9 +39,15 @@
   },
   "scripts": {
     "start": "node bin/roaster.js",
-    "test": "node --test test/"
+    "prepack": "node scripts/prepack.mjs",
+    "postpack": "node scripts/postpack.mjs",
+    "pack:dry": "npm pack --dry-run"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.40.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }
