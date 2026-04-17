@@ -155,11 +155,15 @@ function distill(profile, repos, events) {
   }
 
   // --- portfolio tells ---
-  if (nonFork.length >= 10 && reposWithNoDescription / nonFork.length >= 0.5) {
+  if (
+    nonFork.length >= 5 &&
+    (reposWithNoDescription / nonFork.length >= 0.5 ||
+      (nonFork.length >= 8 && reposWithNoDescription >= 4))
+  ) {
     tells.push({
       category: 'readme',
-      stat: `${reposWithNoDescription} of ${nonFork.length} repos have no description`,
-      description: 'Majority of portfolio lacks any descriptive field.',
+      stat: `${reposWithNoDescription} of ${nonFork.length} original repos have no description`,
+      description: 'Many repos ship without descriptive field.',
       severity: 'spicy',
     });
   }
@@ -178,6 +182,41 @@ function distill(profile, repos, events) {
       category: 'abandonment',
       stat: `${forks.length} forks vs ${nonFork.length} original repos`,
       description: 'More forks than original work.',
+      severity: 'spicy',
+    });
+  }
+
+  // High fork ratio (even when not the majority)
+  const forkRatio = repos.length > 0 ? forks.length / repos.length : 0;
+  if (forkRatio >= 0.4 && repos.length >= 10) {
+    const pct = Math.round(forkRatio * 100);
+    tells.push({
+      category: 'abandonment',
+      stat: `${forks.length} of ${repos.length} repos are forks (${pct}%)`,
+      description: 'High fork-to-original ratio.',
+      severity: 'spicy',
+    });
+  }
+
+  // Old account with disproportionately few original repos
+  const accountAgeYearsCalc =
+    (now - new Date(profile.created_at).getTime()) / yearMs;
+  if (accountAgeYearsCalc >= 8 && nonFork.length > 0 && nonFork.length <= 12) {
+    const monthsPerRepo = Math.round((accountAgeYearsCalc * 12) / nonFork.length);
+    tells.push({
+      category: 'abandonment',
+      stat: `${Math.round(accountAgeYearsCalc)}-year-old account, ${nonFork.length} original repos — one every ${monthsPerRepo} months`,
+      description: 'Low output relative to account age.',
+      severity: 'spicy',
+    });
+  }
+
+  // Publicly archived originals — gave up with a badge on it
+  if (archivedRepos >= 2) {
+    tells.push({
+      category: 'abandonment',
+      stat: `${archivedRepos} publicly archived repos`,
+      description: 'Abandoned in public, with a badge on them.',
       severity: 'spicy',
     });
   }
@@ -218,6 +257,17 @@ function distill(profile, repos, events) {
         category: 'bio',
         stat: `Bio uses ${buzzwords} buzzword${buzzwords > 1 ? 's' : ''}: "${profile.bio.slice(0, 80)}"`,
         description: 'Buzzword-heavy self-description.',
+        severity: 'spicy',
+      });
+    }
+
+    // Multi-title bio ("X ~ Y ~ Z" or "X | Y | Z" or "X / Y / Z")
+    const titleSeparators = (profile.bio.match(/[~|/]/g) || []).length;
+    if (titleSeparators >= 2) {
+      tells.push({
+        category: 'bio',
+        stat: `Bio lists multiple job titles: "${profile.bio.slice(0, 100)}"`,
+        description: 'Bio reads like a stack of alternative job titles.',
         severity: 'spicy',
       });
     }
