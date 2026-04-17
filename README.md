@@ -138,7 +138,7 @@ The skill and CLI enforce these without exception:
 2. **Punch up or sideways.** Never at identity (race, gender, nationality, religion, sexuality, disability, mental health, appearance).
 3. **Consent-first for third parties.** If you roast someone who didn't opt in, the skill auto-softens and adds a "commissioned by X" attribution.
 4. **Learners get soft roasts.** If the target has <3 public repos or signals they're learning, the skill downshifts to `mild` and adds an encouraging closer.
-5. **No fabricated stats.** Every number in the roast traces back to a real API response. The stats footer is the credibility anchor.
+5. **No fabricated stats.** Every number, percentage, year, and quoted bio fragment in the roast traces back to fields in the structured data block — enforced in the system prompt with an explicit allowlist of data paths. The stats footer is the credibility anchor.
 6. **Nuclear ≠ ethics off.** Nuclear unlocks language intensity. It does NOT unlock slurs, identity jokes, or punching down. Ever.
 
 See [`skill/roaster/references/safety-examples.md`](./skill/roaster/references/safety-examples.md) for concrete before/after examples.
