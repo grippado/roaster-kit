@@ -1,0 +1,43 @@
+{
+  "name": "@grippado/roaster-kit",
+  "version": "0.1.0",
+  "description": "Roast a developer's public GitHub profile in the voice of a tech celebrity. Pure satire, public data only.",
+  "keywords": [
+    "roast",
+    "github",
+    "cli",
+    "claude",
+    "fun",
+    "developer-humor"
+  ],
+  "homepage": "https://github.com/grippado/roaster-kit",
+  "bugs": "https://github.com/grippado/roaster-kit/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grippado/roaster-kit.git"
+  },
+  "license": "Apache-2.0",
+  "author": "Gabriel Gripp (@grippado)",
+  "type": "module",
+  "bin": {
+    "roaster": "./bin/roaster.js",
+    "roast": "./bin/roaster.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "skill/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node bin/roaster.js",
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.0"
+  }
+}
