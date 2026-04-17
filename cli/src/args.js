@@ -20,6 +20,7 @@ const DEFAULTS = {
   format: 'reddit',
   lang: 'en',
   sources: ['github'],
+  model: 'claude-sonnet-4-6',
   consented: false,
   help: false,
   version: false,
@@ -58,6 +59,10 @@ export function parseArgs(argv) {
       out.sources = arg.split('=')[1].split(',');
     } else if (arg === '--sources') {
       out.sources = (argv[++i] || '').split(',');
+    } else if (arg.startsWith('--model=')) {
+      out.model = arg.split('=')[1];
+    } else if (arg === '--model' || arg === '-m') {
+      out.model = argv[++i];
     } else if (arg.startsWith('-')) {
       throw new Error(`Unknown flag: ${arg}`);
     } else {
@@ -115,6 +120,9 @@ export const HELP_TEXT = `
                             Values: reddit, twitter, linkedin, terminal
     -l, --lang <code>       Output language. Default: en
                             Values: en, pt-br
+    -m, --model <id>        Anthropic model ID. Default: claude-sonnet-4-6
+                            Examples: claude-sonnet-4-6, claude-opus-4-7
+        --sources <list>    Comma-separated data sources. Default: github
         --sources <list>    Comma-separated data sources. Default: github
                             Values: github, npm, crates, go
         --consented         Confirm the target is in on the joke. Required for

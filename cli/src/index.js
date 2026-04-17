@@ -88,13 +88,12 @@ export async function run(argv) {
     args.spice = 'mild';
   }
 
-  log(`▸ ${data.tells.length} tells collected. Generating roast...`);
+  log(`▸ ${data.tells.length} tells collected. Generating roast with ${args.model}...`);
 
-  // Call the Claude API
   const client = new Anthropic();
   const message = await client.messages.create({
-    model: 'claude-opus-4-7',
-    max_tokens: 2000,
+    model: args.model,
+    max_tokens: 2500,
     system: buildSystemPrompt({
       persona: args.persona,
       spice: args.spice,

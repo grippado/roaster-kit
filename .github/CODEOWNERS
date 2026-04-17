@@ -1,0 +1,6 @@
+# Default: all changes go through Gabriel
+* @grippado
+
+# Persona files: extra attention for safety
+/skill/roaster/personas/ @grippado
+/skill/roaster/references/safety-examples.md @grippado

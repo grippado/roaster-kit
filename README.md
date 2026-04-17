@@ -38,6 +38,10 @@ A **web version** at `roast.gripp.link` is on the way — paste a GitHub handle,
 
 ### CLI
 
+...
+
+By default, roaster uses Claude Sonnet 4.6 for a good balance of quality and cost. You can opt into Opus with `--model=claude-opus-4-7` when you want the premium version.
+
 Works with any Node 20+ package manager. No install needed — run it ephemerally:
 
 ```bash
