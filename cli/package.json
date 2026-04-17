@@ -24,8 +24,8 @@
   "author": "Gabriel Gripp (@grippado)",
   "type": "module",
   "bin": {
-    "roaster": "./bin/roaster.js",
-    "roast": "./bin/roaster.js"
+    "roaster": "bin/roaster.js",
+    "roast": "bin/roaster.js"
   },
   "files": [
     "bin/",
