@@ -7,3 +7,5 @@ cli/README.md
 cli/LICENSE
 cli/.pack-manifest.json
 cli/*.tgz
+
+.env
