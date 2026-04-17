@@ -1,5 +1,5 @@
 {
-  "name": "@grippado/roaster-kit",
+  "name": "roaster-kit",
   "version": "0.1.0",
   "description": "Roast a developer's public GitHub profile in the voice of a tech celebrity. Pure satire, public data only.",
   "keywords": [
@@ -46,7 +46,6 @@
     "@anthropic-ai/sdk": "^0.40.0"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   }
 }

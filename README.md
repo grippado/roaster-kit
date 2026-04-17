@@ -28,7 +28,7 @@ A Claude-powered roast generator that turns anyone's public GitHub footprint int
 
 - **Claude Code slash command** — `/roast grippado --persona=jobs`
 - **Claude skill** — drop into `~/.claude/skills/` and any Claude agent can call it
-- **Standalone CLI** — `npx @grippado/roaster-kit grippado`
+- **Standalone CLI** — `npx roaster-kit grippado`
 
 All three share the same core skill. The CLI is a thin wrapper that calls the Anthropic API with the skill injected as the system prompt.
 
@@ -46,21 +46,21 @@ Works with any Node 20+ package manager. No install needed — run it ephemerall
 
 ```bash
 # npm
-npx @grippado/roaster-kit <github-username>
+npx roaster-kit <github-username>
 
 # yarn
-yarn dlx @grippado/roaster-kit <github-username>
+yarn dlx roaster-kit <github-username>
 
 # pnpm
-pnpm dlx @grippado/roaster-kit <github-username>
+pnpm dlx roaster-kit <github-username>
 ```
 
 Prefer a global install?
 
 ```bash
-npm install -g @grippado/roaster-kit
-yarn global add @grippado/roaster-kit
-pnpm add -g @grippado/roaster-kit
+npm install -g roaster-kit
+yarn global add roaster-kit
+pnpm add -g roaster-kit
 ```
 
 Then use either `roaster` or `roast` as the command name.
@@ -169,9 +169,9 @@ See [`skill/roaster/references/safety-examples.md`](./skill/roaster/references/s
 Before you roast anyone else, roast yourself. It's the rule.
 
 ```bash
-npx @grippado/roaster-kit $(git config github.user) --spice=nuclear
+npx roaster-kit $(git config github.user) --spice=nuclear
 # or
-pnpm dlx @grippado/roaster-kit $(git config github.user) --spice=nuclear
+pnpm dlx roaster-kit $(git config github.user) --spice=nuclear
 ```
 
 ## Roadmap
