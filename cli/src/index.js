@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -24,11 +25,7 @@ export async function run(argv) {
     return;
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    throw new Error(
-      'Set ANTHROPIC_API_KEY in your environment.\n  Get one at https://console.anthropic.com'
-    );
-  }
+  const client = buildClient(args);
 
   log(`▸ Collecting data for @${args.target}...`);
 
@@ -90,26 +87,15 @@ export async function run(argv) {
 
   log(`▸ ${data.tells.length} tells collected. Generating roast with ${args.model}...`);
 
-  const client = new Anthropic();
-  const message = await client.messages.create({
-    model: args.model,
-    max_tokens: 2500,
-    system: buildSystemPrompt({
-      persona: args.persona,
-      spice: args.spice,
-      format: args.format,
-      lang: args.lang,
-      data,
-    }),
-    messages: [
-      { role: 'user', content: buildUserPrompt({ target: args.target }) },
-    ],
+  const systemPrompt = buildSystemPrompt({
+    persona: args.persona,
+    spice: args.spice,
+    format: args.format,
+    lang: args.lang,
+    data,
   });
-
-  const roast = message.content
-    .filter((b) => b.type === 'text')
-    .map((b) => b.text)
-    .join('\n');
+  const userMessage = buildUserPrompt({ target: args.target });
+  const roast = await client.roast(systemPrompt, userMessage, args.model);
 
   process.stdout.write('\n' + roast + '\n\n');
 
@@ -135,4 +121,57 @@ const PERSONA_LABEL = {
 
 function log(msg) {
   if (!process.env.QUIET) process.stderr.write(msg + '\n');
+}
+
+function buildClient(args) {
+  if (args.provider === 'anthropic') {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error(
+        'Set ANTHROPIC_API_KEY in your environment.\n  Get one at https://console.anthropic.com'
+      );
+    }
+    const anthropic = new Anthropic();
+    return {
+      async roast(systemPrompt, userMessage, model) {
+        const message = await anthropic.messages.create({
+          model,
+          max_tokens: 2500,
+          system: systemPrompt,
+          messages: [{ role: 'user', content: userMessage }],
+        });
+        return message.content
+          .filter((b) => b.type === 'text')
+          .map((b) => b.text)
+          .join('\n');
+      },
+    };
+  }
+
+  if (args.provider === 'groq') {
+    if (!process.env.GROQ_API_KEY) {
+      throw new Error(
+        'Set GROQ_API_KEY in your environment.\n  Get one at https://console.groq.com'
+      );
+    }
+    const openai = new OpenAI({
+      apiKey: process.env.GROQ_API_KEY,
+      baseURL: 'https://api.groq.com/openai/v1',
+    });
+    return {
+      async roast(systemPrompt, userMessage, model) {
+        const completion = await openai.chat.completions.create({
+          model,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userMessage },
+          ],
+          max_tokens: 2500,
+        });
+        const content = completion.choices[0]?.message?.content;
+        return typeof content === 'string' ? content : '';
+      },
+    };
+  }
+
+  throw new Error(`Unsupported provider: ${args.provider}`);
 }

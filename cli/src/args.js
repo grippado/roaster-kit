@@ -13,6 +13,7 @@ const VALID_PERSONAS = [
 const VALID_SPICE = ['mild', 'spicy', 'nuclear'];
 const VALID_FORMATS = ['reddit', 'twitter', 'linkedin', 'terminal'];
 const VALID_LANGS = ['en', 'pt-br'];
+const VALID_PROVIDERS = ['anthropic', 'groq'];
 
 const DEFAULTS = {
   persona: 'linus',
@@ -21,6 +22,7 @@ const DEFAULTS = {
   lang: 'en',
   sources: ['github'],
   model: 'claude-sonnet-4-6',
+  provider: 'anthropic',
   consented: false,
   help: false,
   version: false,
@@ -29,6 +31,7 @@ const DEFAULTS = {
 export function parseArgs(argv) {
   const out = { ...DEFAULTS };
   const positional = [];
+  let modelExplicit = false;
 
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
@@ -61,8 +64,14 @@ export function parseArgs(argv) {
       out.sources = (argv[++i] || '').split(',');
     } else if (arg.startsWith('--model=')) {
       out.model = arg.split('=')[1];
+      modelExplicit = true;
     } else if (arg === '--model' || arg === '-m') {
       out.model = argv[++i];
+      modelExplicit = true;
+    } else if (arg.startsWith('--provider=')) {
+      out.provider = arg.split('=')[1];
+    } else if (arg === '--provider') {
+      out.provider = argv[++i];
     } else if (arg.startsWith('-')) {
       throw new Error(`Unknown flag: ${arg}`);
     } else {
@@ -100,6 +109,15 @@ export function parseArgs(argv) {
       `Invalid lang: ${out.lang}\n  Valid: ${VALID_LANGS.join(', ')}`
     );
   }
+  if (!VALID_PROVIDERS.includes(out.provider)) {
+    throw new Error(
+      `Invalid provider: ${out.provider}\n  Valid: ${VALID_PROVIDERS.join(', ')}`
+    );
+  }
+
+  if (!modelExplicit && out.provider === 'groq') {
+    out.model = 'llama-3.3-70b-versatile';
+  }
 
   return out;
 }
@@ -122,6 +140,8 @@ export const HELP_TEXT = `
                             Values: en, pt-br
     -m, --model <id>        Anthropic model ID. Default: claude-sonnet-4-6
                             Examples: claude-sonnet-4-6, claude-opus-4-7
+        --provider <name>   LLM provider. Default: anthropic
+                            Values: anthropic, groq
         --sources <list>    Comma-separated data sources. Default: github
         --sources <list>    Comma-separated data sources. Default: github
                             Values: github, npm, crates, go
@@ -131,7 +151,10 @@ export const HELP_TEXT = `
     -v, --version           Show version.
 
   Environment:
-    ANTHROPIC_API_KEY       Required. Get one at https://console.anthropic.com
+    ANTHROPIC_API_KEY       Required when --provider=anthropic (default). Get one at
+                            https://console.anthropic.com
+    GROQ_API_KEY            Required when --provider=groq. Get one at
+                            https://console.groq.com (free tier, no credit card)
     GITHUB_TOKEN            Optional. Higher rate limits (60 → 5000/hr).
 
   Examples:
