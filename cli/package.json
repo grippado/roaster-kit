@@ -43,7 +43,8 @@
     "pack:dry": "npm pack --dry-run"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.40.0"
+    "@anthropic-ai/sdk": "^0.40.0",
+    "openai": "^4.104.0"
   },
   "publishConfig": {
     "access": "public"

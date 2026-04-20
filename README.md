@@ -67,6 +67,17 @@ Then use either `roaster` or `roast` as the command name.
 
 Set `ANTHROPIC_API_KEY` first ([get one here](https://console.anthropic.com)). Optionally set `GITHUB_TOKEN` to raise the GitHub rate limit from 60/hr to 5000/hr.
 
+### Choose your provider
+
+By default, roaster-kit uses Anthropic's Claude Sonnet 4.6. You can also use Groq (free tier, 14,400 requests/day, no credit card required):
+
+```bash
+export GROQ_API_KEY=gsk_...
+npx roaster-kit grippado --provider=groq
+```
+
+Groq uses Llama 3.3 70B by default. Quality is competitive with Claude for this task; speed is faster.
+
 ### Claude Code slash command
 
 ```bash
